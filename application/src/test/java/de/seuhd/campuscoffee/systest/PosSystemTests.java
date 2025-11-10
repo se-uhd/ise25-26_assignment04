@@ -79,4 +79,41 @@ public class PosSystemTests extends AbstractSysTest {
                 .ignoringFields("createdAt", "updatedAt")
                 .isEqualTo(posToUpdate);
     }
+
+    @Test
+    void importPosFromOsmNode() {
+        // Import Rada Coffee & Rösterei from OSM node 5589879349
+        Pos importedPos = posDtoMapper.toDomain(TestUtils.importPosFromOsm(5589879349L));
+
+        assertThat(importedPos)
+                .isNotNull()
+                .satisfies(pos -> {
+                    assertThat(pos.name()).isEqualTo("Rada Coffee & Rösterei");
+                    assertThat(pos.description()).isEqualTo("Caffé und Rösterei");
+                    assertThat(pos.street()).isEqualTo("Untere Straße");
+                    assertThat(pos.houseNumber()).isEqualTo("21");
+                    assertThat(pos.postalCode()).isEqualTo(69117);
+                    assertThat(pos.city()).isEqualTo("Heidelberg");
+                });
+    }
+
+    @Test
+    void importTestCafeFromOsmNode() {
+        // Import test cafe from OSM node 1 (Beispiel-Café with simple test values)
+        Pos importedPos = posDtoMapper.toDomain(TestUtils.importPosFromOsm(1L));
+
+        assertThat(importedPos)
+                .isNotNull()
+                .satisfies(pos -> {
+                    assertThat(pos.name()).isEqualTo("Beispiel-Café");
+                    assertThat(pos.description()).isEqualTo("Ein Testcafé für die Feature-Validierung");
+                    assertThat(pos.street()).isEqualTo("Teststraße");
+                    assertThat(pos.houseNumber()).isEqualTo("1");
+                    assertThat(pos.postalCode()).isEqualTo(11111);
+                    assertThat(pos.city()).isEqualTo("Teststadt");
+                    assertThat(pos.id()).isNotNull();
+                    assertThat(pos.createdAt()).isNotNull();
+                    assertThat(pos.updatedAt()).isNotNull();
+                });
+    }
 }
