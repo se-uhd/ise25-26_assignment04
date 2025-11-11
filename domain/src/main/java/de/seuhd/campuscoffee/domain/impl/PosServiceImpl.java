@@ -81,23 +81,36 @@ public class PosServiceImpl implements PosService {
 
     /**
      * Converts an OSM node to a POS domain object.
-     * Note: This is a stub implementation and should be replaced with real mapping logic.
+     * Maps all available fields from the OSM node to the POS model.
+     * Requires all mandatory fields to be present.
+     * 
+     * @param osmNode the OSM node with complete information
+     * @return a POS domain object ready to be persisted
+     * @throws OsmNodeMissingFieldsException if required fields are missing
      */
     private @NonNull Pos convertOsmNodeToPos(@NonNull OsmNode osmNode) {
-        if (osmNode.nodeId().equals(5589879349L)) {
-            return Pos.builder()
-                    .name("Rada Coffee & Rösterei")
-                    .description("Caffé und Rösterei")
-                    .type(PosType.CAFE)
-                    .campus(CampusType.ALTSTADT)
-                    .street("Untere Straße")
-                    .houseNumber("21")
-                    .postalCode(69117)
-                    .city("Heidelberg")
-                    .build();
-        } else {
+        // Validate that all required fields are present
+        if (osmNode.name() == null || osmNode.name().isBlank() ||
+            osmNode.street() == null || osmNode.street().isBlank() ||
+            osmNode.houseNumber() == null || osmNode.houseNumber().isBlank() ||
+            osmNode.postalCode() == null ||
+            osmNode.city() == null || osmNode.city().isBlank() ||
+            osmNode.posType() == null ||
+            osmNode.campusType() == null) {
+            log.error("OSM node {} is missing required fields", osmNode.nodeId());
             throw new OsmNodeMissingFieldsException(osmNode.nodeId());
         }
+        
+        return Pos.builder()
+                .name(osmNode.name())
+                .description(osmNode.description() != null ? osmNode.description() : "")
+                .type(osmNode.posType())
+                .campus(osmNode.campusType())
+                .street(osmNode.street())
+                .houseNumber(osmNode.houseNumber())
+                .postalCode(osmNode.postalCode())
+                .city(osmNode.city())
+                .build();
     }
 
     /**
