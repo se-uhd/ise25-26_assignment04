@@ -1,0 +1,8 @@
+<osm version="0.6">
+  <node id="5589879349" lat="49.412345" lon="8.705678">
+    <tag k="name" v="Rada Coffee &amp; Rösterei"/>
+    <tag k="addr:street" v="Hauptstraße 123"/>
+    <tag k="addr:city" v="Heidelberg"/>
+  </node>
+</osm>
+
