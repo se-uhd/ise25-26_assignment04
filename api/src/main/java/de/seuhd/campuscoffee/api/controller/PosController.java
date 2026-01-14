@@ -48,11 +48,19 @@ public class PosController {
                 .body(created);
     }
 
-    @PostMapping("/import/osm/{nodeId}")
-    public ResponseEntity<PosDto> create(
-            @PathVariable Long nodeId) {
+    /**
+     * Imports a Point of Sale from an OpenStreetMap node.
+     * Fetches the OSM node data from the OpenStreetMap API, parses the XML response,
+     * maps the OSM tags to POS fields, and creates a new POS entity.
+     *
+     * @param osmId the OpenStreetMap node ID to import; must not be null
+     * @return the created POS entity as a DTO with HTTP 201 Created status
+     */
+    @PostMapping("/import/{osmId}")
+    public ResponseEntity<PosDto> importFromOsm(
+            @PathVariable Long osmId) {
         PosDto created = posDtoMapper.fromDomain(
-                posService.importFromOsmNode(nodeId)
+                posService.importFromOsmNode(osmId)
         );
         return ResponseEntity
                 .created(getLocation(created.id()))

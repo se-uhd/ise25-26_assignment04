@@ -9,6 +9,13 @@
     </parent>
 
     <artifactId>domain</artifactId>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version> <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <scope>provided</scope>
+    </dependency>
+
 
     <build>
         <plugins>
